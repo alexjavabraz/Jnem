@@ -2,11 +2,8 @@ package nem.academy;
 
 import static java.lang.System.out;
 
-import javax.xml.bind.JAXBElement.GlobalScope;
-
 import org.nem.core.model.Account;
 import org.nem.core.model.primitive.Amount;
-import org.nem.core.node.NodeEndpoint;
 
 import com.github.rosklyar.client.DefaultNemClientFactory;
 import com.github.rosklyar.client.account.AccountClient;

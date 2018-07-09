@@ -1,11 +1,12 @@
 # Nem Java First Application
-Default Application with Spring, Spring Security, JPA, Jquery
+Java Maven
 
-mvn clean install spring-boot:run
+Run CreateAccount.java
 
-java -jar target/NOME_DO_JAR.jar
+You need to obtain your private key, and public key to transfer Faucet Xems
 
-https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-running-your-application.html
+All account started by T is a TestNet account (Faucet Xem)
 
-This project uses NEMPH library
+References
+https://github.com/NEMPH
 https://github.com/NEMPH/nem-apps-lib
