@@ -1,4 +1,4 @@
-# Nem Java First Application
+# Nem Java Wallet / Integration Application
 Java Maven
 
 Run CreateAccount.java
@@ -9,6 +9,7 @@ All account started by T is a TestNet account (Faucet Xem)
 
 References
 https://github.com/NEMPH
+
 https://github.com/rosklyar
 
 JDK 1.8
