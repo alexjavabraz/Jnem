@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>nem.academy</groupId>
 	<artifactId>integration</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>nem Maven Webapp</name>
 	<url>http://maven.apache.org</url>
@@ -44,7 +44,36 @@
 
 
 	</dependencies>
+
+
+
 	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>
+										nem.academy.SimpleScreen
+									</mainClass>
+								</manifest>
+							</archive>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 		<finalName>nem</finalName>
 	</build>
 </project>
