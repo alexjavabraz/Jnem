@@ -47,7 +47,10 @@ public class CreateAccount {
 		configure();
 //		createAccount();
 //		nodeInfo();
-		simpleTransfer2();
+//		simpleTransfer2();
+		
+		loadBalanceAccount();
+		
 		System.exit(0);
 	}
 	
@@ -123,6 +126,31 @@ public class CreateAccount {
 		System.out.println(result.getMessage());
 		System.out.println(result.getTransactionHash().getRaw());
 		
-	}	
+	}
+	
+	/**
+	 * 
+	 */
+	public static void loadBalanceAccount() {
+		try {
+			
+			/**
+			 * Getting by address
+			 */
+			out.println(AccountApi.getAccountByAddress(ACCOUNT_TRANSFER_TO).getEntity().getBalance());
+			
+			
+			/**
+			 * Getting by private key, to address
+			 */
+			String privateKeyToAddress = new Account(new org.nem.core.crypto.KeyPair(
+					org.nem.core.crypto.PrivateKey.fromHexString(myPrivateKey))).getAddress().getEncoded();
+			
+			out.println(AccountApi.getAccountByAddress(privateKeyToAddress).getEntity().getBalance());
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }

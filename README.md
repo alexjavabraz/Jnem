@@ -9,6 +9,6 @@ All account started by T is a TestNet account (Faucet Xem)
 
 References
 https://github.com/NEMPH
-https://github.com/NEMPH/nem-apps-lib
+https://github.com/rosklyar
 
 JDK 1.8
