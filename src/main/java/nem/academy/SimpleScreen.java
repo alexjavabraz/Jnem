@@ -80,6 +80,7 @@ public class SimpleScreen extends javax.swing.JFrame {
 	private JRadioButtonMenuItem rbMenuItem;
 	private JCheckBoxMenuItem cbMenuItem;
     private ImageIcon iconSuccess;	
+    private ImageIcon iconError;
 
 	/**
 	 * 
@@ -260,7 +261,17 @@ public class SimpleScreen extends javax.swing.JFrame {
 		configure();
 
 		try {
-			simpleTransfer();
+			if(Util.isBlankOrNull(privateKeyAccountField.getText()) && Util.isBlankOrNull(accountDestinyTextField.getText())) {
+				simpleTransfer();
+			}else {
+				
+				if (null == iconError) {
+					iconError = new ImageIcon(getImage("error.png"));
+				}
+				
+				JOptionPane.showInputDialog(this, "Private Key and To fields need to be filled", "Error",
+						JOptionPane.PLAIN_MESSAGE, iconError, null, null);
+			}
 		} catch (Exception e) {
 			int ta = optionPane(e.getMessage());
 			if (ta == 0) {
@@ -462,7 +473,7 @@ public class SimpleScreen extends javax.swing.JFrame {
 		if (null == iconSuccess) {
 			iconSuccess = new ImageIcon(getImage("success.png"));
 		}
-
+		
 		JOptionPane.showInputDialog(this, "Transfer success! \n Transaction Hash: ", "Success",
 				JOptionPane.PLAIN_MESSAGE, iconSuccess, null, result.getTransactionHash());
 
