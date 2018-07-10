@@ -13,5 +13,14 @@ public class Util {
 		
 		return false;
 	}
+	
+	public static final String sanityzer(String s) {
+		if(!isBlankOrNull(s)) {
+			s = s.replace("-", "");
+			s = s.trim();
+		}
+		
+		return s;
+	}
 
 }

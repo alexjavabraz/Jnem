@@ -4,7 +4,6 @@ import static java.lang.System.out;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 
 import javax.swing.JLabel;
 
@@ -18,7 +17,7 @@ public class UpdateBalanceThread extends Thread {
 
 	public UpdateBalanceThread(JLabel alabel, String theAccount) {
 		label = alabel;
-		account = theAccount;
+		account = Util.sanityzer(theAccount);
 	}
 
 	public void run() {

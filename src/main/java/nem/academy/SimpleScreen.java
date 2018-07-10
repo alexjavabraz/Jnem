@@ -261,7 +261,7 @@ public class SimpleScreen extends javax.swing.JFrame {
 		configure();
 
 		try {
-			if(Util.isBlankOrNull(privateKeyAccountField.getText()) && Util.isBlankOrNull(accountDestinyTextField.getText()) && Util.isBlankOrNull(amountTextField.getText())) {
+			if(!Util.isBlankOrNull(privateKeyAccountField.getText()) && !Util.isBlankOrNull(accountDestinyTextField.getText()) && !Util.isBlankOrNull(amountTextField.getText())) {
 				simpleTransfer();
 			}else {
 				
@@ -454,8 +454,8 @@ public class SimpleScreen extends javax.swing.JFrame {
 		org.nem.core.crypto.KeyPair senderPrivateKeyPair, recipientPublicKeyPair;
 
 		senderPrivateKeyPair = new org.nem.core.crypto.KeyPair(
-				org.nem.core.crypto.PrivateKey.fromHexString(privateKeyAccountField.getText()));
-		recipientPublicKeyPair = AccountApi.getAccountByAddress(accountDestinyTextField.getText()).getEntity()
+				org.nem.core.crypto.PrivateKey.fromHexString(Util.sanityzer(privateKeyAccountField.getText())));
+		recipientPublicKeyPair = AccountApi.getAccountByAddress(Util.sanityzer(accountDestinyTextField.getText())).getEntity()
 				.getKeyPair();
 
 		org.nem.core.model.ncc.NemAnnounceResult result = TransferTransactionBuilder
