@@ -15,10 +15,10 @@ https://github.com/rosklyar
 JDK 1.8
 
 
-Create a jar file and run:
+Create a jar file and run, in the project directory:
+
 ```
 mvn clean install
-java -jar ./target/
 java -jar ./target/nem-jar-with-dependencies.jar
 ```
 By default the screen already have an private key for TestNet 
