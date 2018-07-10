@@ -261,7 +261,7 @@ public class SimpleScreen extends javax.swing.JFrame {
 		configure();
 
 		try {
-			if(Util.isBlankOrNull(privateKeyAccountField.getText()) && Util.isBlankOrNull(accountDestinyTextField.getText())) {
+			if(Util.isBlankOrNull(privateKeyAccountField.getText()) && Util.isBlankOrNull(accountDestinyTextField.getText()) && Util.isBlankOrNull(amountTextField.getText())) {
 				simpleTransfer();
 			}else {
 				
@@ -269,8 +269,8 @@ public class SimpleScreen extends javax.swing.JFrame {
 					iconError = new ImageIcon(getImage("error.png"));
 				}
 				
-				JOptionPane.showInputDialog(this, "Private Key and To fields need to be filled", "Error",
-						JOptionPane.PLAIN_MESSAGE, iconError, null, null);
+				JOptionPane.showMessageDialog(this, "'Private Key','To' and 'Amount' fields need to be filled", "Error",
+						JOptionPane.PLAIN_MESSAGE, iconError);
 			}
 		} catch (Exception e) {
 			int ta = optionPane(e.getMessage());
