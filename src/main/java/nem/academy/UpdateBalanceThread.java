@@ -2,9 +2,14 @@ package nem.academy;
 
 import static java.lang.System.out;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 import javax.swing.JLabel;
 
 import org.nem.core.model.Account;
+import org.nem.core.model.primitive.Amount;
 
 import io.nem.apps.api.AccountApi;
 import io.nem.apps.builders.ConfigurationBuilder;
@@ -36,9 +41,9 @@ public class UpdateBalanceThread extends Thread {
 					    .nodeNetworkPort("7890")
 					    .setup();
 						
-						out.println(AccountApi.getAccountByAddress(privateKeyToAddress).getEntity().getBalance());
-
-						label.setText("<html><center><font color=blue><b>0 XEM</b></font>");
+						Amount balance = AccountApi.getAccountByAddress(privateKeyToAddress).getEntity().getBalance();
+						
+						label.setText("<html><center><font color=blue><b>"+format(balance.getNumMicroNem())+" XEM</b></font>");
 
 					} catch (Exception e) {
 						Thread.sleep(2000);
@@ -53,6 +58,19 @@ public class UpdateBalanceThread extends Thread {
 			exception.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 
+	 * @param num
+	 * @return
+	 */
+	private String format(long num) {
+		DecimalFormat formatter = new DecimalFormat("###.######");
+		formatter.setMinimumFractionDigits(6);
+		BigDecimal bd = new BigDecimal(num);
+		bd = bd.divide(BigDecimal.TEN.pow(6));
+		return formatter.format(bd);		
+	}	
 
 	private JLabel label;
 	private String account;
