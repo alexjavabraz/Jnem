@@ -1,20 +1,29 @@
 package nem.academy;
 
-import static java.lang.System.out;
-
+import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Menu;
+import java.awt.MenuItem;
 import java.awt.Point;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.security.AccessControlException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Date;
+import javax.swing.Timer;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
@@ -31,6 +40,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextField;
+import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
@@ -70,7 +80,10 @@ public class SimpleScreen extends javax.swing.JFrame {
 	private JLabel feeTextField;
 	
 	private JLabel balance;
-	private JLabel balanceTextField;	
+	private JLabel balanceTextField;
+	private JLabel statusLabel;
+	
+	private static final String VERSION = "V 0.0.1 - ";	
 	
 	private JButton sendButton;
 
@@ -81,6 +94,8 @@ public class SimpleScreen extends javax.swing.JFrame {
 	private JCheckBoxMenuItem cbMenuItem;
     private ImageIcon iconSuccess;	
     private ImageIcon iconError;
+    private JToolBar statusBar;
+    private Timer timer;
 
 	/**
 	 * 
@@ -148,6 +163,7 @@ public class SimpleScreen extends javax.swing.JFrame {
 		initComponents();
 		menuBar();
 		centerFrame();
+		setupStatusBar();
 
 		setDefaultLookAndFeelDecorated(true);
 
@@ -172,7 +188,7 @@ public class SimpleScreen extends javax.swing.JFrame {
 		balance = new JLabel("Balance:");
 		balanceTextField = new JLabel("0 XEM");
 
-		sendButton = new javax.swing.JButton("Send Xem");
+		sendButton = new javax.swing.JButton("Send Xem", new ImageIcon(getImage("icos/transfer.png").getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH)));
 
 		privateKeyAccountField.putClientProperty("Quaqua.TextField.style", "search");
 		accountDestinyTextField.putClientProperty("Quaqua.TextField.style", "search");
@@ -223,25 +239,62 @@ public class SimpleScreen extends javax.swing.JFrame {
 		panel.add(panelSouth, BorderLayout.SOUTH);
 		panel.add(panelCenter, BorderLayout.CENTER);
 
-		setContentPane(panel);
+		setLayout(new BorderLayout());
+		add(panel, BorderLayout.CENTER);
 		updateBalance();
+		systemTray();
 		pack();
-
 	}
+	
+	/**
+	 * 
+	 */
+	private void setupStatusBar() {
+		statusBar = new JToolBar();
+		statusLabel = new JLabel(VERSION);
+//		statusBar.add(new JLabel("V 0.0.1", new ImageIcon(getImage("jnem.png").getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH)), SwingConstants.CENTER));
+		statusBar.add(statusLabel);
+
+		statusBar.putClientProperty("Quaqua.ToolBar.style", "gradient");
+		statusBar.setFloatable(false);
+		add(statusBar, BorderLayout.SOUTH);
+		startTimer();
+	}
+	
+	/**
+	 * 
+	 */
+    private void startTimer() {
+        if (timer==null) {
+            timer=new Timer(500,new ActionListener(){
+
+                public void actionPerformed(ActionEvent e) {
+                    updateStatusLabel();
+                }
+            });
+            timer.setRepeats(true);
+            timer.start();
+        }
+    }
+
+    private void stopTimer() {
+        
+        if (timer != null) {
+            timer.stop();
+            timer = null;
+        }
+    }
+
+    private void updateStatusLabel() {
+       DateFormat tf=new SimpleDateFormat("HH:mm:ss");
+        statusLabel.setText(VERSION + tf.format(new Date()));
+    }
 
 	/**
 	 * 
 	 */
 	private void updateBalance() {
-//		new Thread(new Runnable() {
-//
-//			public void run() {
-//				
-//				}
-//		}).start();
-		
 		new UpdateBalanceThread(balanceTextField, privateKeyAccountField.getText()).start();
-		
 	}
 
 	/**
@@ -249,7 +302,6 @@ public class SimpleScreen extends javax.swing.JFrame {
 	 */
 	private static void configure() {
 		ConfigurationBuilder.nodeNetworkName("TestNet").nodeNetworkProtocol("http").nodeNetworkUri("50.3.87.123") // TESTNET
-																													// NODE
 				.nodeNetworkPort("7890").setup();
 	}
 
@@ -257,7 +309,7 @@ public class SimpleScreen extends javax.swing.JFrame {
 	 * 
 	 * @param evt
 	 */
-	private void convertButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_convertButtonActionPerformed
+	private void convertButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		configure();
 
 		try {
@@ -359,26 +411,29 @@ public class SimpleScreen extends javax.swing.JFrame {
 		menu = new JMenu("");
 		// menu.setMnemonic(KeyEvent.VK_A);
 		menu.getAccessibleContext().setAccessibleDescription("The only menu in this program that has menu items");
-		menu.setIcon(new ImageIcon(getImage("menu.png")));
+		menu.setIcon(new ImageIcon(getImage("menu.png").getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
 		menuBar.add(menu);
 
 		// a submenu
 		menu.addSeparator();
-		submenu = new JMenu("A submenu");
-		submenu.setMnemonic(KeyEvent.VK_S);
+		submenu = new JMenu("Accounts");
+		submenu.setMnemonic(KeyEvent.VK_A);
 
 		// a group of JMenuItems
-		menuItem = new JMenuItem("A text-only menu item", KeyEvent.VK_T);
-		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.ALT_MASK));
-		menuItem.getAccessibleContext().setAccessibleDescription("This doesn't really do anything");
+		menuItem = new JMenuItem("Create new account", KeyEvent.VK_N);
+		menuItem.setIcon(new ImageIcon(getImage("icon-register.png").getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.ALT_MASK));
+		menuItem.getAccessibleContext().setAccessibleDescription("Creates a new Nem Account on Testnet");
 		submenu.add(menuItem);
 
-		menuItem = new JMenuItem("Both text and icon", new ImageIcon("images/middle.gif"));
-		menuItem.setMnemonic(KeyEvent.VK_B);
+		menuItem = new JMenuItem("View Transactions By Account", new ImageIcon(getImage("transactions.png").getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+		menuItem.setMnemonic(KeyEvent.VK_V);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.ALT_MASK));
 		submenu.add(menuItem);
 
-		menuItem = new JMenuItem(new ImageIcon("images/middle.gif"));
+		menuItem = new JMenuItem("Import Primary Key", new ImageIcon(getImage("private_key.png").getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
 		menuItem.setMnemonic(KeyEvent.VK_D);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.ALT_MASK));
 		submenu.add(menuItem);
 
 		// a group of radio button menu items
@@ -477,6 +532,66 @@ public class SimpleScreen extends javax.swing.JFrame {
 		JOptionPane.showInputDialog(this, "Transfer success! \n Transaction Hash: ", "Success",
 				JOptionPane.PLAIN_MESSAGE, iconSuccess, null, result.getTransactionHash());
 
+	}
+	
+	/**
+	 * 
+	 */
+	private void systemTray() {
+        if (!SystemTray.isSupported()) {
+            System.out.println("SystemTray is not supported");
+            return;
+        }
+        final PopupMenu popup   = new PopupMenu();
+        final TrayIcon trayIcon = new TrayIcon(getImage("jnem.png").getScaledInstance(22, 22, java.awt.Image.SCALE_SMOOTH), "JNem Wallet TestNet");
+        final SystemTray tray   = SystemTray.getSystemTray();
+       
+        Menu displayMenu = new Menu("JNem");
+        MenuItem reopen = new MenuItem("Dashboard");
+        MenuItem about = new MenuItem("About");
+        MenuItem exitItem = new MenuItem("Exit");
+       
+        //Add components to pop-up menu
+        popup.add(displayMenu);
+        displayMenu.add(reopen);
+        popup.addSeparator();
+        displayMenu.add(about);
+        popup.add(exitItem);
+       
+        trayIcon.setPopupMenu(popup);
+       
+        try {
+            tray.add(trayIcon);
+        } catch (AWTException e) {
+            System.out.println("TrayIcon could not be added.");
+        }
+        
+        ActionListener listener = new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				MenuItem item = (MenuItem)e.getSource();
+                System.out.println(item.getLabel());
+                if ("Dashboard".equals(item.getLabel())) {
+                    SimpleScreen.this.setVisible(true);
+                    SimpleScreen.this.setState(Frame.NORMAL);
+                } else if ("About".equals(item.getLabel())) {
+                    trayIcon.displayMessage("JNem Wallet for TestNet",
+                            "V 0.0.1", TrayIcon.MessageType.INFO);
+                }
+                
+			}
+        	
+        };
+        
+        about.addActionListener(listener);
+        reopen.addActionListener(listener);
+        
+        exitItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                tray.remove(trayIcon);
+                System.exit(0);
+            }
+        });
 	}
 
 }

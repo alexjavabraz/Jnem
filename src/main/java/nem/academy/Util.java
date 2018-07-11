@@ -1,5 +1,8 @@
 package nem.academy;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+
 public class Util {
 	
 	public static final boolean isBlankOrNull(Object o) {
@@ -22,5 +25,20 @@ public class Util {
 		
 		return s;
 	}
+	
+	
+	/**
+	 * 
+	 * @param num
+	 * @return
+	 */
+	public static String format(long num) {
+		DecimalFormat formatter = new DecimalFormat("###.######");
+		formatter.setMinimumFractionDigits(6);
+		BigDecimal bd = new BigDecimal(num);
+		bd = bd.divide(BigDecimal.TEN.pow(6));
+		String retorno = (formatter.format(bd));
+		return retorno.replace(",", ".");		
+	}	
 
 }

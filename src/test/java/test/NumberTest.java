@@ -1,48 +1,56 @@
 package test;
 
 import static java.lang.System.out;
-import static java.math.BigInteger.TEN;
-import static java.math.BigInteger.valueOf;
+import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.text.DecimalFormat;
+
+import org.junit.Test;
+
+import static nem.academy.Util.format;
 
 public class NumberTest {
 
-	public static void main(String[] args) {
+	@Test
+	public void testValues() {
 		long l = 156952313;
-//		DecimalFormat format1 = new DecimalFormat("###,######");
-//		format1.setGroupingSize(6);
-//		out.println(format1.format(l));
-//		
-//		test(l);
 
-		format(l);
+		String retorno = format(l);
+		assertEquals("156.952313", retorno);
 //
 		l = 15695231;
-		format(l);
+		retorno = format(l);
+		assertEquals("15.695231", retorno);
+
 //
 		l = 5695231;
-		format(l);
+		retorno = format(l);
+		assertEquals("5.695231", retorno);
 //
 		l = 695231;
-		format(l);
+		retorno = format(l);
+		assertEquals("0.695231", retorno);
 		
 		l = 95231;
-		format(l);
+		retorno = format(l);
+		assertEquals("0.095231", retorno);
 		
 		l = 5231;
-		format(l);		
+		retorno = format(l);
+		assertEquals("0.005231", retorno);
 
 		l = 231;
-		format(l);
+		retorno = format(l);
+		assertEquals("0.000231", retorno);
 		
 		l = 31;
-		format(l);
+		retorno = format(l);
+		assertEquals("0.000031", retorno);
 
 		l = 1;
-		format(l);
+		retorno = format(l);
+		assertEquals("0.000001", retorno);
 
 	}
 	
@@ -88,19 +96,9 @@ public class NumberTest {
 		
 	}
 
-	public static void format(long num) {
-		DecimalFormat formatter = new DecimalFormat("###.######");
-		formatter.setMinimumFractionDigits(6);
+	@Test
+	public void convertToNem() {
 		
-		out.println("#############################");
-		
-		BigDecimal bd = new BigDecimal(num);
-		out.println(bd);
-		bd = bd.divide(BigDecimal.TEN.pow(6));
-		out.println(bd);
-		out.println(formatter.format(bd));		
-		
-		out.println("#############################");
 	}
 	
 	
