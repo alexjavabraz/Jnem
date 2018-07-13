@@ -98,7 +98,7 @@ public class NumberTest {
 
 	@Test
 	public void convertToNem() {
-		
+		double d = 1;
 	}
 	
 	

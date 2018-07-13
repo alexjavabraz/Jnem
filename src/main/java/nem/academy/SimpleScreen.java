@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Menu;
@@ -23,7 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import javax.swing.Timer;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
@@ -39,11 +40,14 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
@@ -78,6 +82,9 @@ public class SimpleScreen extends javax.swing.JFrame {
 	
 	private JLabel fee;
 	private JLabel feeTextField;
+	
+	private JLabel message;
+	private JTextArea messageTextArea;	
 	
 	private JLabel balance;
 	private JLabel balanceTextField;
@@ -159,13 +166,13 @@ public class SimpleScreen extends javax.swing.JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		setDefaultLookAndFeelDecorated(true);
 
 		initComponents();
 		menuBar();
 		centerFrame();
 		setupStatusBar();
 
-		setDefaultLookAndFeelDecorated(true);
 
 	}
 
@@ -197,6 +204,9 @@ public class SimpleScreen extends javax.swing.JFrame {
 		privateKeyAccountField.setBackground(new Color(0x00000000, true));
 		accountDestinyTextField.setBackground(new Color(0x00000000, true));
 		amountTextField.setBackground(new Color(0x00000000, true));
+		
+		message = new JLabel("Transaction Message:");
+		messageTextArea = new JTextArea(100, 100);	
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setTitle("Nem Java Wallet Implementation");
@@ -209,12 +219,17 @@ public class SimpleScreen extends javax.swing.JFrame {
 
 		setIconImage(getImage("logo_nem_brasil.png"));
 
-		JPanel panel = new JPanel();
-		panel.setPreferredSize(new Dimension(650, 250));
+		JPanel mainPanel       = new JPanel();
+		JPanel secondMainPanel = new JPanel(new BorderLayout());
+
+		JPanel southPanel = new JPanel(new java.awt.GridBagLayout());
+		setPreferredSize(new Dimension(850, 600));
 
 		JPanel panelNorth = new JPanel();
-		JPanel panelSouth = new JPanel(new GridLayout(1, 2));
-		JPanel panelCenter = new JPanel(new GridLayout(4, 2));
+		JPanel panelSouth = new JPanel(new GridBagLayout());
+		JPanel panelCenter = new JPanel(new GridLayout(5, 2));
+		
+		panelNorth.add(new JLabel("Testnet - Transfer XEM"));
 
 		panelCenter.add(privateKeyAccount);
 		panelCenter.add(privateKeyAccountField);
@@ -224,23 +239,42 @@ public class SimpleScreen extends javax.swing.JFrame {
 
 		panelCenter.add(amountTransfer);
 		panelCenter.add(amountTextField);
-
+		
+		panelCenter.add(balance);
+		panelCenter.add(balanceTextField);
+		
+		JScrollPane scrollPane1 = new JScrollPane();
+		scrollPane1.setViewportView(messageTextArea);
+		
+		GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+		
 		panelCenter.add(fee);
-		panelCenter.add(feeTextField);
+		panelCenter.add(feeTextField);		
 
-		panelNorth.add(new JLabel("Testnet - Transfer XEM"));
-		panelSouth.add(sendButton);
+		southPanel.add(scrollPane1, gridBagConstraints);
+		
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        southPanel.add(message, gridBagConstraints);
 
-		panelSouth.add(balance);
-		panelSouth.add(balanceTextField);
-
-		panel.setLayout(new BorderLayout());
-		panel.add(panelNorth, BorderLayout.NORTH);
-		panel.add(panelSouth, BorderLayout.SOUTH);
-		panel.add(panelCenter, BorderLayout.CENTER);
+		mainPanel.setLayout(new BorderLayout());
+		mainPanel.add(panelNorth, BorderLayout.NORTH);
+		mainPanel.add(panelCenter, BorderLayout.CENTER);
+		mainPanel.add(panelSouth, BorderLayout.SOUTH);
+		
+		secondMainPanel.add(southPanel, BorderLayout.CENTER);
+		secondMainPanel.add(sendButton, BorderLayout.SOUTH);
 
 		setLayout(new BorderLayout());
-		add(panel, BorderLayout.CENTER);
+		add(mainPanel, BorderLayout.NORTH);
+		add(secondMainPanel, BorderLayout.CENTER);
 		updateBalance();
 		systemTray();
 		pack();
