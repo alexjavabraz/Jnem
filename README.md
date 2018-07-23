@@ -14,6 +14,14 @@ https://github.com/rosklyar
 
 JDK 1.8
 
+git clone https://github.com/NEMPH/nem.core.git
+cd nem.core
+mvn clean install -DskipTests=true
+
+git clone https://github.com/NEMPH/nem-apps-lib.git
+cd nem-apps-lib
+mvn clean install -DskipTests=true
+
 
 Create a jar file and run, in the project directory:
 
